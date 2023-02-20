@@ -1,21 +1,38 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package utp.brunori;
 
-/**
- *
- * @author studio
- */
+import java.io.*;
+import java.net.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class ServerMain {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
+    public static void main(String[] args){
+        try {
+            DatagramSocket serverSocket = new DatagramSocket(6789);
+            boolean attivo = true;
+            byte[] bufferIN = new byte[1024];
+            byte[] bufferOUT = new byte[1024];
+            
+            System.out.println("SERVER avviato...");
+            while(attivo)
+            {
+                DatagramPacket receivePacket = new DatagramPacket(bufferIN,bufferIN.length);
+                try {
+                    serverSocket.receive(receivePacket);
+                } catch (IOException ex) {
+                    Logger.getLogger(ServerMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                String ricevuto = new String(receivePacket.getData());
+                int numCaratteri = receivePacket.getLength();
+                ricevuto=ricevuto.substring(0,numCaratteri);
+                System.out.println("RICEVUTO: "+ricevuto);
+                
+                InetAddress IPClient = receivePacket.getAddresse();
+            }
+        } catch (SocketException ex) {
+            Logger.getLogger(ServerMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }
