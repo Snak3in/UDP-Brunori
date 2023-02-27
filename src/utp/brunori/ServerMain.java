@@ -29,7 +29,21 @@ public class ServerMain {
                 System.out.println("RICEVUTO: "+ricevuto);
                 
                 InetAddress IPClient = receivePacket.getAddresse();
+                int portaClient = receivePacket.getPort();
+                
+                String daSpedire = ricevuto.toUpperCase();
+                bufferOUT = daSpedire.getBytes();
+                
+                DatagramPacket sendPacket = new DatagramPacket(bufferOUT, bufferOUT.length, IPClient, portaClient);
+                serverSocket.send(sendPacket);
+                
+                if(ricevuto.equals("fine"))
+                {
+                    System.out.println("SERVER IN CHIUSURA. Buona serata.");
+                    attivo=false;
+                }
             }
+            serverSocket.close();
         } catch (SocketException ex) {
             Logger.getLogger(ServerMain.class.getName()).log(Level.SEVERE, null, ex);
         }
